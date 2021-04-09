@@ -2,7 +2,7 @@ package com.github.p03w.shredder.extraction
 
 import com.github.p03w.shredder.common.EntryType
 
-data class ClassFileEntry(val name: String, val type: EntryType, val data: ByteArray, val hash: Long) {
+data class ClassFileEntry(val name: String, val type: EntryType, val data: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

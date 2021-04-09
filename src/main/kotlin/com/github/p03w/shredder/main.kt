@@ -8,6 +8,7 @@ import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
+import java.security.MessageDigest
 import kotlin.math.abs
 import kotlin.system.measureTimeMillis
 
@@ -40,7 +41,18 @@ suspend fun shred() {
                 var closestScore = Int.MAX_VALUE
 
                 for (new in newClasses) {
-                    if (orig.hash == new.hash) {
+                    if (
+                            orig.data.size == new.data.size &&
+                            MessageDigest.getInstance("MD5").digest(orig.data).let { md5 ->
+                                val a: Long = md5[0] * 256L * md5[1] + 256 * 256 * md5[2] + 256 * 256 * 256 * md5[3]
+                                val b: Long = md5[4] * 256L * md5[5] + 256 * 256 * md5[6] + 256 * 256 * 256 * md5[7]
+                                a xor b
+                            } == MessageDigest.getInstance("MD5").digest(new.data).let { md5 ->
+                                val a: Long = md5[0] * 256L * md5[1] + 256 * 256 * md5[2] + 256 * 256 * 256 * md5[3]
+                                val b: Long = md5[4] * 256L * md5[5] + 256 * 256 * md5[6] + 256 * 256 * 256 * md5[7]
+                                a xor b
+                            }
+                    ) {
                         closest = new
                         closestScore = 0
                         break
