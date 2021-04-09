@@ -21,9 +21,9 @@ suspend fun shred() {
     }
 
     val origClasses = deferredOrig.await()
-    println("${origClasses.size} classes in $origJar.")
+    println("${origClasses.size} classes in $origJar")
     val newClasses = deferredNew.await()
-    println("${newClasses.size} classes in $newJar.")
+    println("${newClasses.size} classes in $newJar")
     println()
 
     val identicalClasses = mutableMapOf<ClassFileEntry, ClassFileEntry>()
@@ -38,7 +38,7 @@ suspend fun shred() {
             }
         }
     }
-    println("Found ${identicalClasses.size} identical classes.\n")
+    println("Found ${identicalClasses.size} identical classes\n")
 
     println("Shredding changed classes...")
     val badMatcher = GlobalScope.launch {
@@ -69,7 +69,7 @@ suspend fun shred() {
         }
     }
     badMatcher.join()
-    println("Found ${changedClasses.size} changed classes.\n")
+    println("Found ${changedClasses.size} changed classes\n")
 }
 
 private fun compareBytes(a: ByteArray, b: ByteArray) =
