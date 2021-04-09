@@ -27,6 +27,7 @@ suspend fun shred() {
     println()
 
     val identicalClasses = mutableMapOf<ClassFileEntry, ClassFileEntry>()
+    val changedClasses = mutableMapOf<ClassFileEntry, ClassFileEntry>()
 
     println("Shredding classes...")
     val badMatcher = GlobalScope.launch {
@@ -57,12 +58,19 @@ suspend fun shred() {
                         closestScore = currentScore
                     }
                 }
-
-                println("$closestScore | $orig -> $closest")
+                if (closestScore == 0) {
+                    identicalClasses[orig] = closest!!
+                } else {
+                    changedClasses[orig] = closest!!
+                }
             }
         }
     }
     badMatcher.join()
+
+    println("${changedClasses.size} changed classes")
+    println("${identicalClasses.size} identical classes")
+    println()
 }
 
 private fun compareBytes(a: ByteArray, b: ByteArray) =
