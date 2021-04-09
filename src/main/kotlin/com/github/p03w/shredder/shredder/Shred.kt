@@ -21,56 +21,55 @@ suspend fun shred() {
     }
 
     val origClasses = deferredOrig.await()
-    println("${origClasses.size} classes in $origJar")
+    println("${origClasses.size} classes in $origJar.")
     val newClasses = deferredNew.await()
-    println("${newClasses.size} classes in $newJar")
+    println("${newClasses.size} classes in $newJar.")
     println()
 
     val identicalClasses = mutableMapOf<ClassFileEntry, ClassFileEntry>()
     val changedClasses = mutableMapOf<ClassFileEntry, ClassFileEntry>()
 
-    println("Shredding classes...")
+    println("Shredding identical classes...")
+    origClasses.forEach { orig ->
+        for (new in newClasses) {
+            if (compareBytes(orig.data, new.data)) {
+                identicalClasses[orig] = new
+                break
+            }
+        }
+    }
+    println("Found ${identicalClasses.size} identical classes.\n")
+
+    println("Shredding changed classes...")
     val badMatcher = GlobalScope.launch {
         origClasses.forEach { orig ->
-            launch {
-                var closest: ClassFileEntry? = null
-                var closestScore = Int.MAX_VALUE
+            if (orig !in identicalClasses.keys) {
+                launch {
+                    var closest: ClassFileEntry? = null
+                    var closestScore = Int.MAX_VALUE
 
-                for (new in newClasses) {
-                    if (compareBytes(orig.data, new.data)) {
-                        identicalClasses[orig] = new
-                        closest = new
-                        closestScore = 0
-                        break
-                    }
+                    for (new in newClasses) {
+                        var currentScore = 0
+                        for (i in 0 until Integer.min(orig.data.size, new.data.size)) {
+                            if (orig.data[i] != new.data[i]) {
+                                currentScore++
+                            }
+                        }
 
-                    var currentScore = 0
-                    for (i in 0 until Integer.min(orig.data.size, new.data.size)) {
-                        if (orig.data[i] != new.data[i]) {
-                            currentScore++
+                        currentScore += abs(orig.data.size - new.data.size)
+
+                        if (currentScore < closestScore) {
+                            closest = new
+                            closestScore = currentScore
                         }
                     }
-
-                    currentScore += abs(orig.data.size - new.data.size)
-
-                    if (currentScore < closestScore) {
-                        closest = new
-                        closestScore = currentScore
-                    }
-                }
-                if (closestScore == 0) {
-                    identicalClasses[orig] = closest!!
-                } else {
                     changedClasses[orig] = closest!!
                 }
             }
         }
     }
     badMatcher.join()
-
-    println("${changedClasses.size} changed classes")
-    println("${identicalClasses.size} identical classes")
-    println()
+    println("Found ${changedClasses.size} changed classes.\n")
 }
 
 private fun compareBytes(a: ByteArray, b: ByteArray) =
