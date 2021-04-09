@@ -6,16 +6,16 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
 suspend fun main() {
-    val orig = "jars/1.16.jar"
-    val new = "jars/1.16.1.jar"
+    val origJar = "jars/1.16.jar"
+    val newJar = "jars/1.16.1.jar"
 
-    val oldExtract = GlobalScope.async {
-        classFilesFromJar(orig, EntryType.ORIGINAL)
+    val deferredOrig = GlobalScope.async {
+        classFilesFromJar(origJar, EntryType.ORIGINAL)
     }
-    val newExtract = GlobalScope.async {
-        classFilesFromJar(new, EntryType.NEW)
+    val deferredNew = GlobalScope.async {
+        classFilesFromJar(newJar, EntryType.NEW)
     }
 
-    println(oldExtract.await())
-    println(newExtract.await())
+    val origClasses = deferredOrig.await()
+    val newClasses = deferredNew.await()
 }
