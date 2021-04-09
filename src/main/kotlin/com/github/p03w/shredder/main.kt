@@ -6,6 +6,7 @@ import kotlin.system.measureTimeMillis
 
 @OptIn(ObsoleteCoroutinesApi::class)
 suspend fun main() {
+    println("========< Shredding >========")
     val time = measureTimeMillis {
         shred()
     }

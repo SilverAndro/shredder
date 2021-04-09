@@ -50,7 +50,7 @@ suspend fun shred() {
 
                     for (new in newClasses) {
                         var currentScore = 0
-                        for (i in 0 until Integer.min(orig.data.size, new.data.size)) {
+                        for (i in 8 until Integer.min(orig.data.size, new.data.size)) { // skip bytes 0-7, jar data
                             if (orig.data[i] != new.data[i]) {
                                 currentScore++
                             }
@@ -64,12 +64,13 @@ suspend fun shred() {
                         }
                     }
                     changedClasses[orig] = closest!!
+                    println(closestScore)
                 }
             }
         }
     }
     badMatcher.join()
-    println("Found ${changedClasses.size} changed classes\n")
+    println("Found ${changedClasses.size} changed classes")
 }
 
 private fun compareBytes(a: ByteArray, b: ByteArray) =
