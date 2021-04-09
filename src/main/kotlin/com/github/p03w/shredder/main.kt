@@ -29,23 +29,29 @@ suspend fun main() {
         origClasses.forEach { orig ->
             launch {
                 var closest: ClassFileEntry? = null
-                var minScore = Int.MAX_VALUE
-                newClasses.forEach { new ->
-                    var score = 0
+                var closestScore = Int.MAX_VALUE
+
+                for (new in newClasses) {
+                    var currentScore = 0
                     for (i in 0 until min(orig.data.size, new.data.size)) {
                         if (orig.data[i] != new.data[i]) {
-                            score++
+                            currentScore++
                         }
                     }
 
-                    score += abs(orig.data.size - new.data.size)
+                    currentScore += abs(orig.data.size - new.data.size)
 
-                    if (score < minScore) {
+                    if (currentScore < closestScore) {
                         closest = new
-                        minScore = score
+                        closestScore = currentScore
+                    }
+
+                    if (closestScore == 0) {
+                        break
                     }
                 }
-                println("$minScore | $orig -> $closest")
+
+                println("$closestScore | $orig -> $closest")
             }
         }
     }
