@@ -10,5 +10,6 @@ suspend fun main() {
     val time = measureTimeMillis {
         shred()
     }
+    println("=============================")
     println("Finished in ${time * .001} seconds")
 }
