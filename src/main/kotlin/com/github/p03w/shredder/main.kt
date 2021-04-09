@@ -9,9 +9,17 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
 import kotlin.math.abs
+import kotlin.system.measureTimeMillis
 
 @OptIn(ObsoleteCoroutinesApi::class)
 suspend fun main() {
+    val time = measureTimeMillis {
+        shred()
+    }
+    println("Finished in ${time * .001} seconds")
+}
+
+suspend fun shred() {
     val origJar = "jars/1.16.jar"
     val newJar = "jars/1.16.1.jar"
 
@@ -32,6 +40,12 @@ suspend fun main() {
                 var closestScore = Int.MAX_VALUE
 
                 for (new in newClasses) {
+                    if (orig.hash == new.hash) {
+                        closest = new
+                        closestScore = 0
+                        break
+                    }
+
                     var currentScore = 0
                     for (i in 0 until min(orig.data.size, new.data.size)) {
                         if (orig.data[i] != new.data[i]) {
@@ -44,10 +58,6 @@ suspend fun main() {
                     if (currentScore < closestScore) {
                         closest = new
                         closestScore = currentScore
-                    }
-
-                    if (closestScore == 0) {
-                        break
                     }
                 }
 
