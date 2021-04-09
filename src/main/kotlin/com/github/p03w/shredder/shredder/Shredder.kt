@@ -28,7 +28,6 @@ suspend fun shred() {
 
     val identicalClasses = mutableMapOf<String, String>()
     val changedClasses = mutableMapOf<String, String>()
-    val deletedClasses = mutableListOf<String>()
 
     println("Shredding identical classes...")
     origClasses.forEach { orig ->
@@ -40,6 +39,9 @@ suspend fun shred() {
         }
     }
     println("Found ${identicalClasses.size} identical classes\n")
+
+    val deletedClasses = mutableListOf<String>()
+    val unsureClasses = mutableMapOf<ClassFileEntry, ClassFileEntry>()
 
     println("Shredding changed classes...")
     val badMatcher = GlobalScope.launch {
@@ -64,7 +66,7 @@ suspend fun shred() {
                             closestScore = currentScore
                         }
                     }
-                    if (closest!!.name in identicalClasses.values || closest.name in changedClasses.values) {
+                    if (closest!!.name in identicalClasses.values) {
                         deletedClasses.add(orig.name)
                     } else {
                         changedClasses[orig.name] = closest.name
@@ -76,6 +78,11 @@ suspend fun shred() {
     badMatcher.join()
     println("Found ${changedClasses.size} changed classes")
     println("Found ${deletedClasses.size} deleted classes")
+
+    val addedClasses = newClasses.filter {
+        it.name !in identicalClasses.values && it.name !in changedClasses.values
+    }
+    println("Found ${addedClasses.size} new classes")
 }
 
 private fun compareBytes(a: ByteArray, b: ByteArray) =
