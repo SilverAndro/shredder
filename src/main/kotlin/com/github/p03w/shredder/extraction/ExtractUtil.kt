@@ -1,8 +1,6 @@
 package com.github.p03w.shredder.extraction
 
 import com.github.p03w.shredder.common.EntryType
-import java.net.URL
-import java.net.URLClassLoader
 import java.util.jar.JarFile
 
 fun classFilesFromJar(pathToJar: String, type: EntryType): List<ClassFileEntry> {
