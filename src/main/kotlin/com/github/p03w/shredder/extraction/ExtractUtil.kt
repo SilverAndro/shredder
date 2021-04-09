@@ -15,11 +15,16 @@ fun classFilesFromJar(pathToJar: String, type: EntryType): List<ClassFileEntry> 
     for (entry in entries) {
         val raw = jarFile.getInputStream(entry).readBytes()
         val digested = MessageDigest.getInstance("MD5").digest(raw)
-        val hash = StringBuilder(digested.size * 2).let { sb ->
+        /* val hash = StringBuilder(digested.size * 2).let { sb ->
             digested.forEach { sb.append(String.format("%02X", it)) }
             sb.toString()
+        } */
+        val hashL = digested.let { md5 ->
+            val a: Long = md5[0] * 256L * md5[1] + 256 * 256 * md5[2] + 256 * 256 * 256 * md5[3]
+            val b: Long = md5[4] * 256L * md5[5] + 256 * 256 * md5[6] + 256 * 256 * 256 * md5[7]
+            a xor b
         }
-        out.add(ClassFileEntry(entry.name, type, raw, hash))
+        out.add(ClassFileEntry(entry.name, type, raw, hashL))
     }
 
     return out
