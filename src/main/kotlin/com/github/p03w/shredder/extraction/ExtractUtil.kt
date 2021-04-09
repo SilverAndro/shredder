@@ -13,8 +13,7 @@ fun classFilesFromJar(pathToJar: String, type: EntryType): List<ClassFileEntry> 
 
     for (entry in entries) {
         val raw = jarFile.getInputStream(entry).readBytes()
-        val hash = raw.hashCode()
-        out.add(ClassFileEntry(entry.name, type, raw, hash))
+        out.add(ClassFileEntry(entry.name, type, raw))
     }
 
     return out
