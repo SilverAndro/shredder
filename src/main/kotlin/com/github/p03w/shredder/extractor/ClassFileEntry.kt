@@ -1,4 +1,4 @@
-package com.github.p03w.shredder.extraction
+package com.github.p03w.shredder.extractor
 
 import com.github.p03w.shredder.common.EntryType
 
