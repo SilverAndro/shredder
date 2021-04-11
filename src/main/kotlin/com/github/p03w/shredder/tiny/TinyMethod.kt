@@ -1,9 +1,11 @@
 package com.github.p03w.shredder.tiny
 
+import com.github.p03w.shredder.common.data.Method
+
 data class TinyMethod(
-    val officialName: String,
+    override val name: String,
 
-    val type: String,
+    override val type: String,
 
-    val tinyName: String,
-)
+    val official: String,
+) : Method()

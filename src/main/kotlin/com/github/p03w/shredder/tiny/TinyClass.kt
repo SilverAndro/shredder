@@ -1,11 +1,13 @@
 package com.github.p03w.shredder.tiny
 
+import com.github.p03w.shredder.common.data.Class
+
 data class TinyClass(
-    val officialName: String,
+    override val name: String,
 
-    val tinyName: String,
+    override val methods: List<TinyMethod>,
 
-    val methods: List<TinyMethod>,
+    override val fields: List<TinyField>,
 
-    val fields: List<TinyField>,
-)
+    val official: String,
+) : Class()
