@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.4.32"
+    id("org.jetbrains.dokka") version "1.4.30"
     application
 }
 
@@ -10,6 +11,7 @@ version = "0.0.0"
 
 repositories {
     mavenCentral()
+    maven(url="https://dl.bintray.com/kotlin/dokka")
 }
 
 dependencies {

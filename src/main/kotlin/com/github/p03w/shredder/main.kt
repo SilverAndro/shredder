@@ -16,9 +16,9 @@ suspend fun main() {
     println("========< Shredding >========")
     val time = measureTimeMillis {
         val extractor = Extractor()
-        val source = extractor.extractClasses("jars/$v1.jar", EntryType.ORIGINAL)
+        val source = extractor.extractClasses("jars/$v1-merged.jar", EntryType.ORIGINAL)
         println("${source.size} classes in $v1")
-        val target = extractor.extractClasses("jars/$v2.jar", EntryType.NEW)
+        val target = extractor.extractClasses("jars/$v2-merged.jar", EntryType.NEW)
         println("${target.size} classes in $v2")
         println()
 

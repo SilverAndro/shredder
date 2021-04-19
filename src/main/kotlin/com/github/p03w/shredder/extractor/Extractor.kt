@@ -1,7 +1,7 @@
 package com.github.p03w.shredder.extractor
 
 import com.github.p03w.shredder.common.EntryType
-import com.github.p03w.shredder.tiny.TinyClass
+import com.github.p03w.shredder.tiny.data.TinyClass
 import java.util.jar.JarFile
 
 class Extractor {
