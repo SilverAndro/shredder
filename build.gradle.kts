@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.4.32"
-    id("org.jetbrains.dokka") version "1.4.30"
+    id("org.jetbrains.dokka") version "1.4.32"
     application
 }
 
@@ -10,8 +10,9 @@ group = "p03w.shredder"
 version = "0.0.0"
 
 repositories {
-    mavenCentral()
     maven(url="https://dl.bintray.com/kotlin/dokka")
+    maven(url="https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
+    mavenCentral()
 }
 
 dependencies {
@@ -35,6 +36,10 @@ val fatJar = task("fatJar", type = Jar::class) {
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     with(tasks.jar.get() as CopySpec)
+}
+
+tasks.dokkaHtml.configure {
+    suppressInheritedMembers.set(true)
 }
 
 tasks {
