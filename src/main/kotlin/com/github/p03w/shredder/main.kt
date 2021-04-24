@@ -8,7 +8,6 @@ import com.github.p03w.shredder.tiny.Mapper
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlin.system.measureTimeMillis
 
-@OptIn(ObsoleteCoroutinesApi::class)
 suspend fun main() {
     // User input would be here, for source and target version names
     val v1 = "1.16"
@@ -19,8 +18,7 @@ suspend fun main() {
         val source = extractor.extractClasses("jars/$v1-merged.jar", EntryType.ORIGINAL)
         println("${source.size} classes in $v1")
         val target = extractor.extractClasses("jars/$v2-merged.jar", EntryType.NEW)
-        println("${target.size} classes in $v2")
-        println()
+        println("${target.size} classes in $v2\n")
 
         val mapper = Mapper()
         val remappedSource = mapper.map(source, extractor.extractTiny("jars/$v1.tiny"))

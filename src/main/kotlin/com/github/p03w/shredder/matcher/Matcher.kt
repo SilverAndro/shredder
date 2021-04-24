@@ -30,7 +30,8 @@ class Matcher {
             origClasses.forEach { orig ->
                 if (orig.name !in identicalClasses.keys) {
                     launch {
-                        var closest: ClassFileEntry? = null
+                        // Can use lateinit because theres always something close
+                        lateinit var closest: ClassFileEntry
                         var closestScore = Int.MAX_VALUE
 
                         for (new in newClasses) {
@@ -43,7 +44,8 @@ class Matcher {
                                 closestScore = distance
                             }
                         }
-                        if (closest!!.name in identicalClasses.values) {
+
+                        if (closest.name in identicalClasses.values) {
                             deletedClasses.add(orig.name)
                         } else {
                             changedClasses[orig.name] = closest.name
