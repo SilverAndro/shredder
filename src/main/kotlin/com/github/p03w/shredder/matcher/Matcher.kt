@@ -34,18 +34,13 @@ class Matcher {
                         var closestScore = Int.MAX_VALUE
 
                         for (new in newClasses) {
-                            var currentScore = 0
-                            for (i in 8 until Integer.min(orig.data.size, new.data.size)) { // skip bytes 0-7, jar data
-                                if (orig.data[i] != new.data[i]) {
-                                    currentScore++
-                                }
-                            }
+                            // Quit early if known
+                            if (new.name in identicalClasses.values) continue
 
-                            currentScore += abs(orig.data.size - new.data.size)
-
-                            if (currentScore < closestScore) {
+                            val distance = levenshteinOfByteArrays(orig.data, new.data)
+                            if (distance < closestScore) {
                                 closest = new
-                                closestScore = currentScore
+                                closestScore = distance
                             }
                         }
                         if (closest!!.name in identicalClasses.values) {
